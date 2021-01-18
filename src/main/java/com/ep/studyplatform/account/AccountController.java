@@ -71,7 +71,6 @@ public class AccountController {
         // 리퍼지토리를 로직으로 볼것이냐 도메인으로 볼것이냐는 논란이 많다.
         // 기선님은 리퍼지토리를 도메인으로 쓰되,
         //Account account - accountRepository
-
     }
 
 }
