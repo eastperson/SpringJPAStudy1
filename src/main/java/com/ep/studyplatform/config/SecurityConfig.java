@@ -18,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 해당하는 url은 시큐리티 대상에서 제외된다.
         http.authorizeRequests()
-                .mvcMatchers("/","/login","/sign-up","/check-email","/check-email-token"
+                .mvcMatchers("/","/login","/sign-up","/check-email-token"
                                 ,"/email-login","/check-email-login","/login-link")
                 .permitAll()
                 // 프로필에 대한 접근은 GET만 허용한다.
@@ -31,12 +31,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 타임리프 form으로 만들었을 때 자동으로 csrf 기능을 지원해준다.
         // form 안에 자동으로 <input type="hidden" name="_csrf" value="db0ae85c-0a9d-4955-b20c-37fbb85c5e0d">가 들어가있다.
 
+        // 커스텀 로그인 페이지로 이동할 수 있다.
+        http.formLogin()
+                .loginPage("/login").permitAll();
+
+        // 로그아웃할 때 이동하는 페이지
+        http.logout()
+                .logoutSuccessUrl("/");
+
     }
 
     // static resources들을 인증없이 허가하는 것으로 허용한다.
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .mvcMatchers("/node_modules/**")
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // coomon locations은 흔히 사용하는 경로
     }
 }

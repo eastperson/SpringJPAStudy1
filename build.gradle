@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.3.8.RELEASE'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "com.github.node-gradle.node" version "2.2.3"
 }
 
 group = 'com.ep'
@@ -38,9 +39,29 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.0.Final'
+    compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5'
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time
+    compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time'
 
 
 }
+
+/**
+ * npm install start
+ */
+node {
+    version = '12.13.1'
+    download = true
+    nodeModulesDir = file("${projectDir}/src/main/resources/static")
+}
+
+task copyFrontLib(type: Copy) {
+    from "${projectDir}/src/main/resources/static"
+    into "${projectDir}/build/resources/main/static/."
+}
+
+copyFrontLib.dependsOn npmInstall
+compileJava.dependsOn copyFrontLib
 
 test {
     useJUnitPlatform()
