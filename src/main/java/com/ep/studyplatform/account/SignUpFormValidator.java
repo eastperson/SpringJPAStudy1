@@ -1,6 +1,7 @@
 package com.ep.studyplatform.account;
 
-import com.ep.studyplatform.domain.Account;
+import com.ep.studyplatform.account.AccountRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

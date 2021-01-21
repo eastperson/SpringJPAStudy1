@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프 네임스페이스를 설정한다. -->
-<head th:replace="fragements.html :: head"></head>
+<head th:replace="fragments.html :: head"></head>
 <body class="bg-light">
 
-<div th:replace="fragements.html :: main-nav"></div>
+<div th:replace="fragments.html :: main-nav"></div>
 <div class="container">
     <div class="py-5 text-center">
         <h2>계정 만들기</h2>
@@ -61,8 +61,8 @@
             </div>
         </form>
     </div>
-    <div th:replace="fragements.html :: footer"></div>
+    <div th:replace="fragments.html :: footer"></div>
 </div>
-<script th:replace="fragements.html :: form-validation"></script>
+<script th:replace="fragments.html :: form-validation"></script>
 </body>
 </html>
