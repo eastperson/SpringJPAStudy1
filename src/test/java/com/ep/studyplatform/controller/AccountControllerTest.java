@@ -51,7 +51,7 @@ class AccountControllerTest {
                     .param("email","email@email.com"))
                     .andExpect(status().isOk())
                     .andExpect(model().attributeExists("error"))
-                    .andExpect(view().name("account/checkedEmail"))
+                    .andExpect(view().name("account/checked-email"))
                     .andExpect(unauthenticated());
     }
 
@@ -73,7 +73,7 @@ class AccountControllerTest {
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("nickname"))
                 .andExpect(model().attributeExists("numberOfUser"))
-                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(view().name("account/checked-email"))
                 // 스프링 시큐리티가 있는 mockMVC는 기본 mockMVC랑 다르다. csrf, authenticated 기능이 추가된다.
                 .andExpect(authenticated().withUsername("eastperson"));
     }

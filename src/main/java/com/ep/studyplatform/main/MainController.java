@@ -1,5 +1,6 @@
 package com.ep.studyplatform.main;
 
+
 import com.ep.studyplatform.account.CurrentUser;
 import com.ep.studyplatform.domain.Account;
 import org.springframework.stereotype.Controller;
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-    @GetMapping
-    public String home(@CurrentUser Account account, Model model ){
-        if(account != null) {
+    @GetMapping("/")
+    public String home(@CurrentUser Account account, Model model) {
+        if (account != null) {
             model.addAttribute(account);
         }
 
@@ -19,8 +20,8 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String login(){
-
+    public String login() {
         return "login";
     }
+
 }

@@ -2,7 +2,7 @@ package com.ep.studyplatform.main;
 
 import com.ep.studyplatform.account.AccountRepository;
 import com.ep.studyplatform.account.AccountService;
-import com.ep.studyplatform.account.SignUpForm;
+import com.ep.studyplatform.account.form.SignUpForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

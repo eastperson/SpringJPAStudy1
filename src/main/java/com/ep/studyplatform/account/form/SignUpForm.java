@@ -1,4 +1,4 @@
-package com.ep.studyplatform.account;
+package com.ep.studyplatform.account.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -22,4 +22,5 @@ public class SignUpForm {
     @NotBlank
     @Length(min = 8, max = 50)
     private String password;
+
 }

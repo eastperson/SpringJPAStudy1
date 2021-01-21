@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-// 현재 인증된 사용자 정보가 anonymousUser이면 null이 된다.
 @AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account")
 public @interface CurrentUser {
 }

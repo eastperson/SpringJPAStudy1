@@ -1,7 +1,7 @@
 package com.ep.studyplatform;
 
 import com.ep.studyplatform.account.AccountService;
-import com.ep.studyplatform.account.SignUpForm;
+import com.ep.studyplatform.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

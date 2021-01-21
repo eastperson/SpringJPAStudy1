@@ -1,12 +1,8 @@
 package com.ep.studyplatform.settings.form;
 
-import com.ep.studyplatform.domain.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.modelmapper.ModelMapper;
 
 @Data
-@NoArgsConstructor
 public class Notifications {
 
     private boolean studyCreatedByEmail;
