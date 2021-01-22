@@ -4,13 +4,16 @@ import com.ep.studyplatform.account.AccountService;
 import com.ep.studyplatform.account.CurrentUser;
 import com.ep.studyplatform.domain.Account;
 import com.ep.studyplatform.domain.Tag;
+import com.ep.studyplatform.domain.Zone;
 import com.ep.studyplatform.settings.form.*;
 import com.ep.studyplatform.settings.validator.NicknameValidator;
 import com.ep.studyplatform.settings.validator.PasswordFormValidator;
 import com.ep.studyplatform.tag.TagRepository;
+import com.ep.studyplatform.zone.ZoneRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +30,9 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class SettingsController {
+
 
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
     static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
@@ -39,6 +44,8 @@ public class SettingsController {
     static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
     static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
     static final String SETTINGS_TAGS_URL = "/" + SETTINGS_TAGS_VIEW_NAME;
+    static final String SETTINGS_ZONE_VIEW_NAME = "settings/zones";
+    static final String SETTINGS_ZONE_URL = "/" + SETTINGS_ZONE_VIEW_NAME;
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
@@ -46,6 +53,7 @@ public class SettingsController {
     private final TagRepository tagRepository;
     // 스프링 부트에는 기본적으로 ObjectMapper가 빈으로 등록되어있다.
     private final ObjectMapper objectMapper;
+    private final ZoneRepository zoneRepository;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -115,6 +123,45 @@ public class SettingsController {
         accountService.updateNotifications(account, notifications);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
         return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
+    }
+
+    @GetMapping(SETTINGS_ZONE_URL)
+    public String updateZone(@CurrentUser Account account, Model model) throws JsonProcessingException {
+        model.addAttribute(account);
+        Set<Zone> zones = accountService.getZones(account);
+        model.addAttribute("zones", zones.stream().map(Zone::toString).collect(Collectors.toList()));
+
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(allZones));
+
+        return SETTINGS_ZONE_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_ZONE_URL + "/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+
+
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
+
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.addZone(account, zone);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_ZONE_URL + "/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentUser Account account,  @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.removeZone(account, zone);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(SETTINGS_TAGS_URL)

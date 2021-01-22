@@ -2,6 +2,8 @@ package com.ep.studyplatform.controller;
 
 import com.ep.studyplatform.account.AccountRepository;
 import com.ep.studyplatform.domain.Account;
+import com.ep.studyplatform.mail.EmailMessage;
+import com.ep.studyplatform.mail.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,7 @@ class AccountControllerTest {
 
     // mocking을 한다.
     @MockBean
-    private JavaMailSender javaMailSender;
+    private EmailService emailService;
 
     @DisplayName("인증 메일 확인 - 입력값 오류")
     @Test
@@ -124,6 +126,6 @@ class AccountControllerTest {
         assertNotNull(account.getEmailCheckToken());
 
         // Mockito 기능 활용. 호출이 되었는지.
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
     }
 }
