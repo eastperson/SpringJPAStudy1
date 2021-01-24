@@ -163,6 +163,7 @@ public class AccountService implements UserDetailsService {
         emailService.sendEmail(emailMessage);
     }
 
+    // account가 detached 상태이다.
     public void addTag(Account account, Tag tag) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getTags().add(tag));
@@ -190,5 +191,13 @@ public class AccountService implements UserDetailsService {
     public void removeZone(Account account, Zone zone) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getZones().remove(zone));
+    }
+
+    public Account getAccount(String nickname) {
+        Account account = accountRepository.findByNickname(nickname);
+        if (account == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        return account;
     }
 }

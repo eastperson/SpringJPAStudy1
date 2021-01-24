@@ -1,9 +1,11 @@
 package com.ep.studyplatform.zone;
 
+import com.ep.studyplatform.domain.Tag;
 import com.ep.studyplatform.domain.Zone;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,15 @@ public class ZoneService {
                     }).collect(Collectors.toList());
             zoneRepository.saveAll(zoneList);
         }
+    }
+
+    public Zone findOrCreateNew(String cityName, String provinceName) {
+
+        Zone zone = zoneRepository.findByCityAndProvince(cityName,provinceName);
+        if (zone == null) {
+            zone = zoneRepository.save(Zone.builder().city(cityName).province(provinceName).build());
+        }
+        return zone;
     }
 
 }

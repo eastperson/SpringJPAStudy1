@@ -9,7 +9,9 @@ import com.ep.studyplatform.settings.form.*;
 import com.ep.studyplatform.settings.validator.NicknameValidator;
 import com.ep.studyplatform.settings.validator.PasswordFormValidator;
 import com.ep.studyplatform.tag.TagRepository;
+import com.ep.studyplatform.tag.TagService;
 import com.ep.studyplatform.zone.ZoneRepository;
+import com.ep.studyplatform.zone.ZoneService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,8 @@ public class SettingsController {
     // 스프링 부트에는 기본적으로 ObjectMapper가 빈으로 등록되어있다.
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
+    private final ZoneService zoneService;
+    private final TagService tagService;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -140,13 +144,7 @@ public class SettingsController {
     @PostMapping(SETTINGS_ZONE_URL + "/add")
     @ResponseBody
     public ResponseEntity addZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
-
-
-        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
-
-        if (zone == null) {
-            return ResponseEntity.badRequest().build();
-        }
+        Zone zone = zoneService.findOrCreateNew(zoneForm.getCityName(),zoneForm.getProvinceName());
 
         accountService.addZone(account, zone);
         return ResponseEntity.ok().build();
@@ -181,10 +179,7 @@ public class SettingsController {
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
         String title = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(title);
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(title).build());
-        }
+        Tag tag = tagService.findOrCreateNew(title);
 
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();

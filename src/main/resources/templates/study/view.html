@@ -5,60 +5,22 @@
 <head th:replace="fragments.html :: head"></head>
 <body class="bg-light">
     <div th:replace="fragments.html :: main-nav"></div>
-
-    <div th:if="study.useBanner" class="row" id="study-logo">
-        <img th:src="${study.image}">
-    </div>
+    <div th:replace="fragments.html :: study-banner"></div>
 
     <div class="container">
-        <div class="row pt-4 text-left justify-content-none bg-light">
-            <div class="col-6">
-                <a href="#" class="text-decoration-none" th:href="@{'/study/' + ${study.path}">
-                    <span class="h2" th:text="${study.title}">스터디 이름</span>
-                </a>
-            </div>
-            <div class="col-4 text-right justify-content-end">
-                <span th:if="${!study.published}" class="d-inline-block" tabindex="0"
-                        data-toggle="tooltip" data-placement="bottom" title="스터디 공개 준비중">
-                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>DRAFT</button>
-                </span>
-                <span th:if="${study.closed}" class="d-inline-block" tabindex="0"
-                      data-toggle="tooltip" data-placement="bottom" title="스터디 종료함">
-                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>CLOSED</button>
-                </span>
-                <span th:if="${!study.recruiting}" class="d-inline-block" tabindex="0"
-                      data-toggle="tooltip" data-placement="bottom" title="팀원 모집중 아님">
-                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>OFF</button>
-                </span>
-                <span sec:authorize="isAuthenticated()" th:if="${study.isJoinable(#authentication.principal)}"
-                        class="btn-group" role="group" aria-label="Basic example">
-                    <a class="btn btn-primary" th:href="@{'/study' + ${study.path} + '/join'}">
-                        스터디 가입
-                    </a>
-                    <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/members'}" th:text="${study.members.size()}">1</a>
-                </span>
-                <span sec:authorize="isAuthenticated()" th:if="${!study.closed && study.isMember(#authentication.principal)}" class="btn-group"
-                        role="group">
-                    <a class="btn btn-outline-warning" th:href="@{'/study/' + ${study.path} + '/leave'}">
-                        스터디 탈퇴
-                    </a>
-                    <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/members'}" th:text="${study.members.size()}">1</a>
-                </span>
-                <span sec:authorize="isAuthenticated()" th:if="${study.published && !study.closed && study.isManager(#authentication.principal)}">
-                    <a class="btn btn-outline-warning" th:href="@{'/study/' + ${study.path} + '/new-event'}">
-                        <i class="fa fa-plus"></i>모임 만들기
-                    </a>
-                </span>
-            </div>
+        <div th:replace="fragments.html :: study-info"></div>
+        <div th:replace="fragments.html :: study-menu(studyMenu='info')"></div>
 
-
-            <span>
-                <button>
-
-                </button>
-            </span>
+        <div class="row px-3 justify-content-center">
+            <!--태그가 섞여있는 텍스트문은 utext로 보여준다.-->
+            <div class="col-10 pt-3" th:utext="${study.fullDescription}"></div>
         </div>
         <div th:replace="fragments.html :: footer"></div>
     </div>
+    <script type="application/javascript">
+        $(function (){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </body>
 </html>

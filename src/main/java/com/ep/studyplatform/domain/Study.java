@@ -1,6 +1,8 @@
 package com.ep.studyplatform.domain;
 
+import com.ep.studyplatform.account.UserAccount;
 import lombok.*;
+import org.apache.catalina.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,6 +10,18 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+// repository에 작성
+@NamedEntityGraph(name="Study.withAll",attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers"),
+        @NamedAttributeNode("members")})
+@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers")})
 @Entity
 @Getter
 @Setter @EqualsAndHashCode(of = "id")
@@ -48,6 +62,8 @@ public class Study {
 
     private LocalDateTime recruitingUpdatedDateTime;
 
+    private boolean recruiting;
+
     private boolean published;
 
     private boolean closed;
@@ -57,5 +73,18 @@ public class Study {
 
     public void addManager(Account account) {
         this.managers.add(account);
+    }
+
+    public boolean isJoinable(UserAccount userAccount) {
+        Account account = userAccount.getAccount();
+        return this.isPublished() && this.isRecruiting() && !this.members.contains(account) && !this.managers.contains(account);
+    }
+
+    public boolean isMember(UserAccount userAccount) {
+        return this.members.contains(userAccount.getAccount());
+    }
+
+    public boolean isManager(UserAccount userAccount) {
+        return this.managers.contains(userAccount.getAccount());
     }
 }
