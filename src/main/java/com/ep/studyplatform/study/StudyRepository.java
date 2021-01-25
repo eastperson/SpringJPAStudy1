@@ -15,8 +15,14 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
 
 
     @EntityGraph(value = "Study.withTagsAndManagers", type = EntityGraph.EntityGraphType.FETCH)
-    Study findAccountWithTagsByPath(String path);// JPA는 withTags라는 무의미한 단어이다.그래서 다른 엔티티 그래프를 사용한다.
+    Study findStudyWithTagsByPath(String path);// JPA는 withTags라는 무의미한 단어이다.그래서 다른 엔티티 그래프를 사용한다.
 
     @EntityGraph(value = "Study.withZonesAndManagers", type = EntityGraph.EntityGraphType.FETCH)
-    Study findAccountWithZonesByPath(String path);
+    Study findStudyWithZonesByPath(String path);
+
+    @EntityGraph(value = "Study.withManagers", type = EntityGraph.EntityGraphType.FETCH)
+    Study findStudyWithManagersByPath(String path);
+
+    @EntityGraph(value = "Study.withMembers", type = EntityGraph.EntityGraphType.FETCH)
+    Study findStudyWithMembersByPath(String path);
 }

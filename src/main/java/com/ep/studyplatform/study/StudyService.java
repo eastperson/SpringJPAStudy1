@@ -16,6 +16,8 @@ import org.springframework.ui.ModelMap;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.ep.studyplatform.study.form.StudyForm.VALID_PATH_PATTERN;
+
 
 @Service
 @RequiredArgsConstructor
@@ -84,14 +86,14 @@ public class StudyService {
     }
 
     public Study getStudyToUpdateTag(Account account, String path) {
-        Study study = studyRepository.findAccountWithTagsByPath(path);
+        Study study = studyRepository.findStudyWithTagsByPath(path);
         checkIfExistingStudy(path,study);
         checkIfManager(account,study);
         return study;
     }
 
     public Study getStudyToUpdateZone(Account account, String path) {
-        Study study = studyRepository.findAccountWithZonesByPath(path);
+        Study study = studyRepository.findStudyWithZonesByPath(path);
         checkIfExistingStudy(path,study);
         checkIfManager(account,study);
         return study;
@@ -102,5 +104,64 @@ public class StudyService {
         if(study == null) {
             throw new IllegalArgumentException(path +"에 해당하는 스터디가 없습니다.");
         }
+    }
+
+    public void publish(Study study) {
+        study.publish();
+    }
+
+    public void close(Study study) {
+        study.close();
+    }
+
+    public void startRecruit(Study study) {
+        study.startRecruit();
+    }
+
+    public void stopRecruit(Study study) {
+        study.stopRecruit();
+    }
+
+    public Study getStudyToUpdateStatus(Account account, String path) {
+        Study study = studyRepository.findStudyWithManagersByPath(path);
+        checkIfExistingStudy(path, study);
+        checkIfManager(account, study);
+        return study;
+    }
+
+    public boolean isValidPath(String newPath) {
+        if(!newPath.matches(VALID_PATH_PATTERN)) {
+            return false;
+        }
+
+        return !studyRepository.existsByPath(newPath);
+    }
+
+    public void updateStudyPath(Study study, String newPath) {
+        study.setPath(newPath);
+    }
+
+    public boolean isValidTitle(String newTitle) {
+        return newTitle.length() <= 50;
+    }
+
+    public void updateStudyTitle(Study study, String newTitle) {
+        study.setTitle(newTitle);
+    }
+
+    public void remove(Study study) {
+        if(study.isRemovable()) {
+            studyRepository.delete(study);
+        } else {
+            throw new IllegalArgumentException("스터디를 삭제할 수 없습니다. 비공개로 전환한 뒤 삭제해 주세요.");
+        }
+    }
+
+    public void addMember(Study study, Account account) {
+        study.addMemeber(account);
+    }
+
+    public void removeMember(Study study, Account account) {
+        study.removeMemeber(account);
     }
 }
