@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //private final AccountService accountService;
-    // UserDetailsService를 상속 받은 것이다.
+    //    // UserDetailsService를 상속 받은 것이다.
     private final UserDetailsService accountService;
     private final DataSource dataSource;
 
