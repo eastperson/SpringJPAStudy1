@@ -12,7 +12,6 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
     @EntityGraph(value = "Study.withAll", type = EntityGraph.EntityGraphType.LOAD)
     Study findByPath(String path);
 
-
     @EntityGraph(value = "Study.withTagsAndManagers", type = EntityGraph.EntityGraphType.FETCH)
     Study findStudyWithTagsByPath(String path);// JPA는 withTags라는 무의미한 단어이다.그래서 다른 엔티티 그래프를 사용한다.
 

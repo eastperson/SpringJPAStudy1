@@ -1,16 +1,15 @@
 package com.ep.studyplatform.modules.account;
 
+import com.ep.studyplatform.infra.AbstractContainerBaseTest;
+import com.ep.studyplatform.infra.MockMvcTests;
 import com.ep.studyplatform.infra.mail.EmailMessage;
 import com.ep.studyplatform.infra.mail.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.transaction.Transactional;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,14 +21,18 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@Transactional // Trasaction을 넣어줘야 적용이 된다.
-@SpringBootTest
+//@Transactional // Trasaction을 넣어줘야 적용이 된다.
+//@SpringBootTest
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 포트를 띄워서 할 수도 있다.
 //@AutoConfigureWebClient 서블릿을 띄우면 해당 컨피규어를 사용할 수 있다.
-@AutoConfigureMockMvc
-class AccountControllerTest {
+//@AutoConfigureMockMvc
+@MockMvcTests
+@Testcontainers
+class AccountControllerTest extends AbstractContainerBaseTest {
 
     @Autowired private MockMvc mockMvc;
 

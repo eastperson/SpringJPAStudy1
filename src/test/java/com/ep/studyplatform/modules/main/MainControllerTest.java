@@ -1,5 +1,7 @@
 package com.ep.studyplatform.modules.main;
 
+import com.ep.studyplatform.infra.AbstractContainerBaseTest;
+import com.ep.studyplatform.infra.MockMvcTests;
 import com.ep.studyplatform.modules.account.AccountRepository;
 import com.ep.studyplatform.modules.account.AccountService;
 import com.ep.studyplatform.modules.account.form.SignUpForm;
@@ -8,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -20,9 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 // JUnit5 부터는 @RunWith를 쓰지 않아도 된다.
-@SpringBootTest
-@AutoConfigureMockMvc
-class MainControllerTest {
+@MockMvcTests
+class MainControllerTest  extends AbstractContainerBaseTest {
 
     @Autowired
     MockMvc mockMvc;

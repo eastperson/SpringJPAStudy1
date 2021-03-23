@@ -145,7 +145,7 @@ public class AccountService implements UserDetailsService {
         context.setVariable("message","스터디올래 로그인 하려면 링크를 클릭하세요.");
         context.setVariable("host",appProperties.getHost());
 
-        String message = templateEngine.process("mail/simple-link",context);
+        String message = templateEngine.process("mail/simplle-link",context);
 
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(account.getEmail())

@@ -20,6 +20,11 @@ public class PackageDependencyTests {
     private static final String ZONE = "..modules.zone..";
 
     @ArchTest
+    ArchRule modulesPackageRule = classes().that().resideInAnyPackage("com.studyplatform.modules..")
+            .should().onlyBeAccessed().byClassesThat()
+            .resideInAnyPackage("com.studyplatform.modules..");
+
+    @ArchTest
     ArchRule studyPackageRule = classes().that().resideInAPackage("..modules.study..")
                 .should().onlyBeAccessed().byClassesThat()
                 .resideInAnyPackage(STUDY,EVENT);
@@ -32,8 +37,9 @@ public class PackageDependencyTests {
     ArchRule accountPackageRule = classes().that().resideInAPackage(ACCOUNT)
             .should().accessClassesThat().resideInAnyPackage(TAG, ZONE, ACCOUNT);
 
+    // 각각의 모듈간에 circular dependency가 없는지
     @ArchTest
-    ArchRule cycleCheck = slices().matching("com.studyolle.modules.(*)..")
+    ArchRule cycleCheck = slices().matching("com.studyplatform.modules.(*)..")
             .should().beFreeOfCycles();
 
 }
