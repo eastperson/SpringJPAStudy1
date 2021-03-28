@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id "com.github.node-gradle.node" version "2.2.3"
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.ep'
@@ -61,7 +62,9 @@ dependencies {
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.13.0'
     // https://mvnrepository.com/artifact/org.testcontainers/postgresql
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.13.0'
-
+    // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
+    implementation group: 'com.querydsl', name: 'querydsl-jpa'
+    implementation group: 'com.querydsl', name: 'querydsl-apt'
 
 
 }
@@ -86,3 +89,23 @@ compileJava.dependsOn copyFrontLib
 test {
     useJUnitPlatform()
 }
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+

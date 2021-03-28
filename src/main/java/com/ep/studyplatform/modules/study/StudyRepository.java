@@ -25,4 +25,12 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
     Study findStudyWithMembersByPath(String path);
 
     Study findStudyOnlyByPath(String path);
+
+    @EntityGraph(value = "Study.withTagsAndZones", type = EntityGraph.EntityGraphType.FETCH)
+    Study findStudyWithTagsAndZonesById(Long id);
+
+    // 한 곳에서만 사용하는 EntityGraph는 아래와 같은 방법으로 해도 된다.
+    // 도메인에 있는 엔티티그래프를 따로 정의해주지 않아도 된다.
+    @EntityGraph(attributePaths = {"members","managers"})
+    Study findStudyWithMangersAndMembersById(Long id);
 }
