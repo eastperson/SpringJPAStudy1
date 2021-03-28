@@ -2,12 +2,23 @@ package com.ep.studyplatform.modules.account;
 
 
 import com.ep.studyplatform.modules.event.Event;
-import com.ep.studyplatform.modules.study.Study;
 import com.ep.studyplatform.modules.tag.Tag;
 import com.ep.studyplatform.modules.zone.Zone;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -82,10 +93,6 @@ public class Account {
 
     public boolean canSendConfirmEmail() {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
-    }
-
-    public boolean isMembersOf(Study study) {
-        return study.getMembers().contains(this);
     }
 
     public boolean isEnrollmentOf(Event event) {

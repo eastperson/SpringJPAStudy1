@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id "com.github.node-gradle.node" version "2.2.3"
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.ep'
@@ -28,7 +29,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
@@ -49,8 +49,23 @@ dependencies {
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
 
     // https://mvnrepository.com/artifact/com.tngtech.archunit/archunit-junit5-api
-    testCompile group: 'com.tngtech.archunit', name: 'archunit-junit5-api', version: '0.13.1'
-    testImplementation group: 'com.tngtech.archunit', name: 'archunit-junit5-api', version: '0.13.1'
+    // https://mvnrepository.com/artifact/com.tngtech.archunit/archunit
+    implementation group: 'com.tngtech.archunit', name: 'archunit', version: '0.13.1'
+
+    testCompile group: 'com.tngtech.archunit', name: 'archunit-junit5', version: '0.13.1'
+    testImplementation group: 'com.tngtech.archunit', name: 'archunit-junit5', version: '0.13.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    // https://mvnrepository.com/artifact/org.testcontainers/testcontainers
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.13.0'
+    // https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.13.0'
+    // https://mvnrepository.com/artifact/org.testcontainers/postgresql
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.13.0'
+    // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
+    implementation group: 'com.querydsl', name: 'querydsl-jpa'
+    implementation group: 'com.querydsl', name: 'querydsl-apt'
+
 
 }
 
@@ -74,3 +89,23 @@ compileJava.dependsOn copyFrontLib
 test {
     useJUnitPlatform()
 }
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+

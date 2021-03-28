@@ -22,8 +22,8 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //private final AccountService accountService;
-    // UserDetailsService를 상속 받은 것이다.
-    private final UserDetailsService accountService;
+    //    // UserDetailsService를 상속 받은 것이다.
+    private final UserDetailsService userDetailsService;
     private final DataSource dataSource;
 
     @Override
@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/");
 
         http.rememberMe()
-                .userDetailsService(accountService)
+                .userDetailsService(userDetailsService)
                 .tokenRepository(tokenRepository());
     }
 

@@ -2,12 +2,15 @@ package com.ep.studyplatform.modules.study;
 
 import com.ep.studyplatform.modules.account.Account;
 import com.ep.studyplatform.modules.event.Event;
+import com.ep.studyplatform.modules.study.event.StudyCreatedEvent;
+import com.ep.studyplatform.modules.study.event.StudyUpdateEvent;
 import com.ep.studyplatform.modules.study.form.StudyDescriptionForm;
 import com.ep.studyplatform.modules.tag.Tag;
 import com.ep.studyplatform.modules.zone.Zone;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +26,13 @@ public class StudyService {
 
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = studyRepository.save(study);
         newStudy.addManager(account);
+        // 스터디를 만들 때가 아닌, 공개했을 때 알림을 보내자
+        //eventPublisher.publishEvent(new StudyCreatedEvent(newStudy));
         return newStudy;
     }
 
@@ -110,18 +116,25 @@ public class StudyService {
 
     public void publish(Study study) {
         study.publish();
+        this.eventPublisher.publishEvent(new StudyCreatedEvent(study));
     }
 
     public void close(Study study) {
+
         study.close();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study,"스터디를 종료했습니다."));
     }
 
     public void startRecruit(Study study) {
+
         study.startRecruit();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study,"팀원 모집을 시작합니다."));
     }
 
     public void stopRecruit(Study study) {
+
         study.stopRecruit();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study,"팀원 모집을 중단합니다."));
     }
 
     public Study getStudyToUpdateStatus(Account account, String path) {
@@ -172,5 +185,10 @@ public class StudyService {
         Study study = studyRepository.findStudyOnlyByPath(path);
         checkIfExistingStudy(path, study);
         return study;
+    }
+
+    public void updateStudyDescriptuon(Study study, StudyDescriptionForm studyDescriptionForm){
+        modelMapper.map(studyDescriptionForm,study);
+        eventPublisher.publishEvent(new StudyUpdateEvent(study,"스터디 소개를 수정했습니다."));
     }
 }
