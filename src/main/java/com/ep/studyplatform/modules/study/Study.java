@@ -82,6 +82,8 @@ public class Study {
 
     private LocalDateTime closedDateTime;
 
+    private int memberCount;
+
 
     public void addManager(Account account) {
         this.getManagers().add(account);
@@ -101,7 +103,9 @@ public class Study {
     }
 
     public void addMemeber(Account account) {
+
         this.getMembers().add(account);
+        this.memberCount ++;
     }
 
     public String getImage() {
@@ -157,7 +161,9 @@ public class Study {
     }
 
     public void removeMemeber(Account account) {
+
         this.getMembers().remove(account);
+        this.memberCount --;
     }
 
     public boolean isManagedBy(Account account) {

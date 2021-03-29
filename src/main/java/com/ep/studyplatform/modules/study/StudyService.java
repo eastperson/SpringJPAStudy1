@@ -6,6 +6,7 @@ import com.ep.studyplatform.modules.study.event.StudyCreatedEvent;
 import com.ep.studyplatform.modules.study.event.StudyUpdateEvent;
 import com.ep.studyplatform.modules.study.form.StudyDescriptionForm;
 import com.ep.studyplatform.modules.tag.Tag;
+import com.ep.studyplatform.modules.tag.TagRepository;
 import com.ep.studyplatform.modules.zone.Zone;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,7 @@ public class StudyService {
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final TagRepository tagRepository;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = studyRepository.save(study);
@@ -191,4 +193,24 @@ public class StudyService {
         modelMapper.map(studyDescriptionForm,study);
         eventPublisher.publishEvent(new StudyUpdateEvent(study,"스터디 소개를 수정했습니다."));
     }
+
+//    public void generateTestStudies(Account account) {
+//        for(int i = 0; i < 30; i++) {
+//            String randomValue = RandomString.make(5);
+//            Study study = Study.builder()
+//                    .title("테스트 스터디 " + randomValue)
+//                    .path("test-" + randomValue)
+//                    .shortDescription("테스트용 스터디 입니다.")
+//                    .fullDescription("test")
+//                    .tags(new HashSet<>())
+//                    .managers(new HashSet<>())
+//                    .build();
+//            study.publish();
+//            Study newStudy= this.createNewStudy(study,account);
+//            Tag jpa = tagRepository.findByTitle("JPA");
+//            newStudy.getTags().add(jpa);
+//
+//        }
+//    }
+
 }
