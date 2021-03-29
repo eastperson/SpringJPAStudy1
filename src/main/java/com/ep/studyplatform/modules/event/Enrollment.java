@@ -9,8 +9,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import java.time.LocalDateTime;
 
+@NamedEntityGraph(
+        name = "Enrollment.withEventAndStudy",
+        attributeNodes = {
+                @NamedAttributeNode(value = "event", subgraph = "study")
+        },
+        // 직접적인 연관관계에 있는 Event와 Event안에 있는 Study까지 가져오고 싶어서 subgraph를 사용한다.
+        subgraphs = @NamedSubgraph(name = "study", attributeNodes = @NamedAttributeNode("study"))
+)
 @Entity
 @Getter @Setter
 @EqualsAndHashCode(of = "id")
